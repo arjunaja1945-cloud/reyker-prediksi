@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediksi Bola WDBOS - Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:wght@700;900&display=swap"
+        rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Playfair+Display:wght@700;900&display=swap');
+
+        :root {
+            --bg-deep: #060b18;
+            --glass-bg: rgba(15, 23, 42, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent-glow: #3b82f6;
+            --accent-yellow: #c3ed07;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --card-bg: #ffffff;
+            --card-text: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            background-image:
+                radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(195, 237, 7, 0.03) 0%, transparent 40%);
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .main-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            padding: 60px 20px;
+        }
+
+        /* Branding Section */
+        .branding-header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .branding-header p {
+            color: var(--accent-glow);
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            font-size: 0.7rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            opacity: 0.9;
+        }
+
+        .branding-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.3rem, 7vw, 4rem);
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, 0.7) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            /* Disederhanakan untuk performa */
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .meta-info {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .meta-info span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 6px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .header-actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* Action Buttons */
+        .action-flex {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn-modern {
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            color: #fff;
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-modern.highlight {
+            background: var(--accent-yellow);
+            color: #000;
+            border: none;
+        }
+
+        .btn-modern.highlight:hover {
+            background: #e1ff00;
+            box-shadow: 0 10px 30px rgba(195, 237, 7, 0.4);
+        }
+
+        .header-action-btn {
+            min-height: 46px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+
+        .header-action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-action-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid #444;
+        }
+
+        .header-action-btn.primary {
+            background: var(--accent-yellow);
+            color: #000;
+            border: none;
+        }
+
+        /* Content Container */
+        .content-container {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px 25px;
+            backdrop-filter: blur(8px);
+            /* Dikurangi untuk performa mobile */
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .content-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+
+        .top-meta {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Marquee Section */
+        .marquee-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .marquee-box p {
+            color: var(--accent-yellow);
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            white-space: nowrap;
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee-anim 12s linear infinite;
+        }
+
+        @keyframes marquee-anim {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* Tables Premium Styling - Ultimate Luxury Version */
+        .league-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 40px;
+            background: var(--card-bg);
+            color: var(--card-text);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            table-layout: fixed;
+            position: relative;
+            /* Mengoptimalkan render pada scroll */
+            contain: content;
+        }
+
+        .league-table th,
+        .league-table td {
+            text-align: center !important;
+            vertical-align: middle !important;
+        }
+
+        .league-header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .league-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--accent-yellow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-shadow: none;
+        }
+
+        .league-name-header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #fff;
+            padding: 20px !important;
+            border: none !important;
+        }
+
+        .league-title-text {
+            font-size: 1.15rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .col-header {
+            background: #fcfdfe !important;
+            color: #2563eb !important;
+            font-weight: 900 !important;
+            font-size: 0.8rem !important;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 16px !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.15) !important;
+            border-right: 1px solid rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .col-header:last-child {
+            border-right: none !important;
+        }
+
+        .league-table td {
+            padding: 15px 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            /* Garis hitam tipis horizontal */
+            border-right: 1px solid rgba(0, 0, 0, 0.04);
+            /* Garis hitam tipis vertikal */
+            color: #334155;
+            position: relative;
+            word-break: break-word;
+            /* Mencegah teks meluap */
+        }
+
+        .league-table td:last-child {
+            border-right: none;
+        }
+
+        /* Match Scoreboard Layout - Luxury Sports Version */
+        .match-cell-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .team-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            /* Mencegah overflow flexbox */
+        }
+
+        .team-wrapper.home {
+            flex-direction: row-reverse;
+            text-align: right;
+            justify-content: flex-start;
+        }
+
+        .team-wrapper.away {
+            text-align: left;
+            justify-content: flex-start;
+        }
+
+        .team-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 900;
+            flex-shrink: 0;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .team-name {
+            flex: 1;
+            font-weight: 700;
+            font-size: 0.95rem;
+            line-height: 1.2;
+            color: #334155;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .vs-badge {
+            flex-shrink: 0;
+            background: #f1f5f9;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            font-weight: 900;
+            padding: 5px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            font-style: italic;
+            border: 1px solid #e2e8f0;
+            min-width: 45px;
+            text-align: center;
+        }
+
+        .league-table tr {
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .league-table tr:hover td {
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .league-table tbody tr:hover {
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Hover Blue Accent Line */
+        .league-table tbody tr td:first-child::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 20%;
+            bottom: 20%;
+            width: 4px;
+            background: #2563eb;
+            border-radius: 0 4px 4px 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .league-table tbody tr:hover td:first-child::before {
+            opacity: 1;
+        }
+
+        .score-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .score-box {
+            background: #eff6ff;
+            color: #2563eb;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            border: 1px solid #dbeafe;
+            min-width: 45px;
+            text-align: center;
+        }
+
+        .score-sep {
+            color: #2563eb;
+            font-weight: 900;
+            opacity: 0.5;
+        }
+
+        .score-display {
+            background: #eff6ff;
+            color: #2563eb;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            border: 1px solid #dbeafe;
+            display: inline-block;
+            min-width: 60px;
+        }
+
+        /* SMART COLUMN SIZING - Dioptimalkan agar tidak terpotong */
+        .date-col {
+            width: 20% !important;
+        }
+
+        .match-col {
+            width: 60% !important;
+        }
+
+        .score-col {
+            width: 20% !important;
+        }
+
+        @media (max-width: 768px) {
+            .main-wrapper {
+                padding: 20px 12px 28px;
+            }
+
+            .branding-header {
+                margin-bottom: 32px;
+            }
+
+            .branding-header h1 {
+                font-size: 1.8rem;
+                letter-spacing: 1px;
+            }
+
+            .branding-header p {
+                font-size: 0.8rem;
+            }
+
+            .meta-info {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+                font-size: 0.72rem;
+            }
+
+            .meta-info span {
+                justify-content: center;
+                padding: 8px 10px;
+                border-radius: 14px;
+            }
+
+            .header-actions {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .header-action-btn {
+                width: 100%;
+                font-size: 0.78rem;
+                letter-spacing: 0.3px;
+            }
+
+            .content-container {
+                padding: 18px 12px;
+                border-radius: 15px;
+            }
+
+            .top-meta {
+                font-size: 1rem;
+                margin-bottom: 18px;
+                line-height: 1.35;
+            }
+
+            .marquee-box {
+                padding: 10px;
+                margin-bottom: 18px;
+            }
+
+            .marquee-box p {
+                font-size: 0.78rem;
+                letter-spacing: 1px;
+            }
+
+            .league-table {
+                margin-bottom: 24px;
+                border-radius: 18px;
+            }
+
+            .league-name-header {
+                padding: 15px 10px !important;
+            }
+
+            .league-header-container {
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .league-title-text {
+                font-size: 0.9rem;
+                letter-spacing: 1px;
+                justify-content: center;
+                flex-wrap: wrap;
+                text-align: center;
+            }
+
+            .league-badge {
+                font-size: 0.6rem;
+                padding: 3px 8px;
+            }
+
+            .col-header {
+                font-size: 0.6rem !important;
+                white-space: nowrap;
+                padding: 12px 2px !important;
+                letter-spacing: 0;
+            }
+
+            /* Responsive Columns - SMART MOBILE LAYOUT */
+            .date-col {
+                width: 75px !important;
+            }
+
+            .match-col {
+                width: auto !important;
+            }
+
+            .score-col {
+                width: 70px !important;
+            }
+
+            .league-table td {
+                padding: 12px 4px;
+                font-size: 0.7rem;
+                line-height: 1.2;
+            }
+
+            /* Stack Date & Time on Mobile */
+            .league-table td:first-child {
+                font-size: 0.65rem;
+                color: #64748b;
+                white-space: normal;
+                word-spacing: 100vw;
+                text-align: center !important;
+            }
+
+            .team-name {
+                font-size: 0.7rem;
+                font-weight: 700;
+                line-height: 1.1;
+                flex: 1;
+                white-space: nowrap;
+                font-size: 0.72rem;
+                font-weight: 700;
+                line-height: 1.1;
+                white-space: normal;
+                text-align: center;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                width: 100%;
+            }
+
+            .match-cell-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+                padding: 5px 0;
+            }
+
+            .team-wrapper {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .team-wrapper.home,
+            .team-wrapper.away {
+                text-align: center;
+            }
+
+            .team-name {
+                font-size: 0.72rem;
+                font-weight: 700;
+                line-height: 1.1;
+                white-space: normal;
+                text-align: center;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                min-height: 1.1em;
+            }
+
+            .vs-badge {
+                min-width: auto;
+                width: fit-content;
+                padding: 1px 8px;
+                font-size: 0.5rem;
+                margin: 2px 0;
+                background: rgba(0, 0, 0, 0.05);
+                color: #94a3b8;
+                border-radius: 4px;
+            }
+
+            .score-container {
+                flex-direction: column;
+                gap: 5px;
+                /* Sama dengan gap match-cell-content */
+            }
+
+            .score-box {
+                padding: 4px 6px;
+                font-size: 0.72rem;
+                min-width: 45px;
+            }
+
+            .score-sep {
+                font-size: 0.5rem;
+                margin: 2px 0;
+                opacity: 0.3;
+                height: 12px;
+                display: flex;
+                align-items: center;
+            }
+
+            .score-display {
+                padding: 6px 4px;
+                font-size: 0.85rem;
+                min-width: 50px;
+                text-align: center;
+                display: block;
+                margin: 0 auto;
+            }
+
+            .team-icon {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-wrapper {
+                padding-inline: 10px;
+            }
+
+            .branding-header h1 {
+                font-size: 1.6rem;
+            }
+
+            .meta-info {
+                grid-template-columns: 1fr;
+            }
+
+            .date-col {
+                width: 70px !important;
+            }
+
+            .score-col {
+                width: 65px !important;
+            }
+
+            .league-title-text {
+                font-size: 0.8rem;
+            }
+
+            .content-container {
+                padding: 16px 10px;
+            }
+
+            .header-action-btn {
+                min-height: 44px;
+                padding: 10px 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="main-wrapper">
+        <div class="branding-header">
+            <p>Prediksi Bola</p>
+            <h1>PREDIKSI BOLA WDBOS</h1>
+            <div class="meta-info">
+                <span><i class="ph ph-user"></i> By WDBOS</span>
+                <span><i class="ph ph-calendar-blank"></i> <span id="currentDateHeader">-</span></span>
+                <span><i class="ph ph-chat-centered-text"></i> -</span>
+                <span><i class="ph ph-star"></i> Sticky post</span>
+            </div>
+            <div class="header-actions">
+                <button id="refreshBtnMain" class="header-action-btn secondary">
+                    <i class="ph-bold ph-arrows-clockwise" id="refreshIcon"></i> REFRESH DATA
+                </button>
+                <button id="copyBtn" class="header-action-btn primary">
+                    <i class="ph-bold ph-copy" style="font-size: 1.2rem;"></i> SALIN SCRIPT JADWAL
+                </button>
+            </div>
+        </div>
+
+        <div class="content-container">
+            <div class="top-meta" id="displayDateText">...</div>
+
+            <div class="marquee-box" id="marqueeContainer">
+                <p>SELAMAT DATANG DI PREDIKSI BOLA WDBOS! | SELALU UTAMAKAN PREDIKSI SENDIRI!</p>
+            </div>
+
+            <div id="dataContent">
+                <!-- Tables will be injected here -->
+                <div style="text-align: center; padding: 50px; color: #888;">
+                    <i class="ph ph-spinner ph-spin" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                    Menyingkronkan Jadwal...
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const CONFIG = {
+            DATA_URL: 'https://shortq.xyz/prediksibola',
+            PROXY_URL: 'https://corsproxy.io/?', // Proxy yang lebih cepat & stabil
+            POLLING_INTERVAL: 15000,
+            AUTO_REFRESH: true
+        };
+
+        let lastDataHash = null;
+
+        /**
+         * Fungsi untuk mengambil dan memproses data secara otomatis
+         * @param {boolean} force - Jika true, akan memaksa update meskipun data identik
+         */
+        async function updateDashboard(force = false) {
+            try {
+                // WAJIB PAKAI PROXY UNTUK BYPASS CORS
+                const targetUrl = CONFIG.PROXY_URL + encodeURIComponent(`${CONFIG.DATA_URL}?t=${Date.now()}`);
+                const response = await fetch(targetUrl);
+                if (!response.ok) throw new Error('Failed to fetch source page');
+
+                const htmlText = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlText, 'text/html');
+
+                // 1. CARI PANEL TARGET: Judul panel biasanya pendek (di bawah 100 karakter)
+                const allElements = Array.from(doc.querySelectorAll('h1, h2, h3, h4, b, strong, a, span, div'));
+                const dateTarget = allElements.find(el => {
+                    const txt = el.textContent.trim().toUpperCase();
+                    return txt.includes('PREDIKSI') && txt.includes('BOLA') && /\d/.test(txt) && !txt.includes('JADWAL') && txt.length < 100;
+                }) || allElements.find(el => el.textContent.toUpperCase().includes('JADWAL BOLA 27'));
+
+                if (!dateTarget) {
+                    console.warn('Judul Prediksi tidak ditemukan.');
+                    return;
+                }
+
+                const scheduleTitle = dateTarget.innerText.trim();
+
+                // 2. AUTO-CLICK: Cari link di panel tersebut (Skip jika link menuju Sabercoding/Link Umum)
+                let prediksiLink = dateTarget.tagName === 'A' ? dateTarget : dateTarget.querySelector('a');
+                if (!prediksiLink) {
+                    prediksiLink = dateTarget.closest('a') ||
+                        dateTarget.parentElement?.querySelector('a[href*="http"]') ||
+                        dateTarget.closest('div')?.querySelector('a[href*="http"]');
+                }
+
+                // Validasi link: Jangan klik link credits/branding yang tidak berisi data
+                if (prediksiLink && (prediksiLink.href.includes('Sabercoding.com') || prediksiLink.innerText.includes('Koloni4d'))) {
+                    prediksiLink = null;
+                }
+
+                let finalData = null;
+                if (prediksiLink && prediksiLink.href && !prediksiLink.href.includes(window.location.hostname)) {
+                    console.log('SINKRONISASI AKTIF: ' + scheduleTitle);
+                    const subUrl = CONFIG.PROXY_URL + encodeURIComponent(prediksiLink.href);
+
+                    // Gunakan controller untuk mencegah fetch yang terlalu lama (timeout 8 detik)
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+                    try {
+                        const subRes = await fetch(subUrl, { signal: controller.signal });
+                        if (subRes.ok) finalData = await subRes.text();
+                    } catch (e) { console.log("Fetch timeout/error."); }
+                    clearTimeout(timeoutId);
+                }
+
+                if (!finalData) finalData = htmlText;
+
+                // 3. UPDATE HEADER UI (Tanpa Tembok Teks)
+                window.currentScheduleTitle = scheduleTitle;
+                const dateHeader = document.getElementById('currentDateHeader');
+                const dateDisplay = document.getElementById('displayDateText');
+
+                if (dateHeader) dateHeader.innerText = scheduleTitle.replace(/PREDIKSI BOLA/gi, '').trim();
+                if (dateDisplay) dateDisplay.innerText = scheduleTitle;
+
+                const currentHash = btoa(unescape(encodeURIComponent(finalData + scheduleTitle))).substring(0, 32);
+                if (currentHash !== lastDataHash || force) {
+                    processIncomingData(finalData);
+                    lastDataHash = currentHash;
+                    // Simpan data terbaru ke cache lokal untuk load instan berikutnya
+                    localStorage.setItem('wdbos_last_data', finalData);
+                    localStorage.setItem('wdbos_last_title', scheduleTitle);
+                    localStorage.setItem('wdbos_last_hash', currentHash);
+                }
+            } catch (error) {
+                console.error('Update Error:', error);
+                // HANYA fallback ke data.json jika ini adalah pemuatan pertama dan gagal total
+                if (!lastDataHash) {
+                    try {
+                        const localRes = await fetch('data.json');
+                        const localData = await localRes.json();
+                        renderWithJSON(localData);
+                        lastDataHash = "fallback-initial"; // Tandai agar tidak terus-menerus mencoba fallback
+                    } catch (e) { }
+                }
+                // Jika sudah ada data live yang tampil, biarkan saja (jangan ditimpa data lama)
+            }
+        }
+
+        /**
+         * Menangani data yang masuk (baik HTML snippet atau JSON)
+         */
+        function processIncomingData(data) {
+            try {
+                const jsonData = JSON.parse(data);
+                renderWithJSON(jsonData);
+            } catch (e) {
+                // Jika bukan JSON, anggap sebagai HTML snippet
+                renderWithHTMLSnippet(data);
+            }
+        }
+
+        /**
+         * GLOBAL UTILITIES FOR RENDERING
+         */
+        const cleanTeam = (t) => t.trim().replace(/\([nN]\)/g, '').replace(/\s*[\/\-]\s*\d+\s*$/, '').replace(/\s+/g, ' ').trim();
+        const normalizeTime = (t) => t.trim().replace(/[\.\s]+/g, ':').replace(/(\d{2}):(\d{2})/, '$1:$2').trim();
+
+        const formatMatchText = (text) => {
+            const parts = text.split(/\s+VS\s+/i);
+            if (parts.length >= 2) {
+                const homeTeam = cleanTeam(parts[0]);
+                const awayTeam = cleanTeam(parts[1]);
+
+                const getInitials = (name) => {
+                    const words = name.split(' ');
+                    return words.length > 1 ? (words[0][0] + words[1][0]).toUpperCase() : name.substring(0, 2).toUpperCase();
+                };
+
+                return `
+                    <div class="match-cell-content">
+                        <div class="team-wrapper home">
+                            <div class="team-icon">${getInitials(homeTeam)}</div>
+                            <span class="team-name">${homeTeam}</span>
+                        </div>
+                        <span class="vs-badge">VS</span>
+                        <div class="team-wrapper away">
+                            <div class="team-icon">${getInitials(awayTeam)}</div>
+                            <span class="team-name">${awayTeam}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            return text;
+        };
+
+        const formatScoreText = (text) => {
+            let raw = text.trim();
+
+            // 1. Jika sudah format skor murni (misal: "1:2" atau "2-0")
+            const pureScore = raw.match(/^(\d+)\s*[:\-]\s*(\d+)$/);
+            if (pureScore) {
+                return `<div class="score-container"><span class="score-box">${pureScore[1]}</span><span class="score-sep">:</span><span class="score-box">${pureScore[2]}</span></div>`;
+            }
+
+            // 2. Jika bukan format skor murni, anggap sebagai Handicap dan konversi ke Tebakan Skor yang bervariasi
+            let val = raw.replace(/(\d+)\s+(\d+)\/(\d+)/g, (m, p1, p2, p3) => parseFloat(p1) + (parseInt(p2) / parseInt(p3)));
+            val = val.replace(/(\d+)\/(\d+)/g, (m, p1, p2) => parseInt(p1) / parseInt(p2));
+
+            const nums = val.match(/\d+(\.\d+)?/g);
+            let s1 = 1, s2 = 0;
+
+            if (nums) {
+                const n = parseFloat(nums[0]), r = Math.random();
+                if (n === 0) {
+                    const p = [[0, 0], [1, 1], [2, 2], [1, 1]]; const c = p[Math.floor(r * p.length)]; s1 = c[0]; s2 = c[1];
+                } else if (n <= 0.5) {
+                    const p = [[1, 0], [2, 1], [1, 1], [0, 0]]; const c = p[Math.floor(r * p.length)]; s1 = c[0]; s2 = c[1];
+                } else if (n <= 1.0) {
+                    const p = [[2, 1], [2, 0], [1, 0], [3, 1]]; const c = p[Math.floor(r * p.length)]; s1 = c[0]; s2 = c[1];
+                } else if (n <= 1.5) {
+                    const p = [[2, 0], [3, 1], [3, 0], [2, 1]]; const c = p[Math.floor(r * p.length)]; s1 = c[0]; s2 = c[1];
+                } else {
+                    const p = [[3, 0], [3, 1], [4, 1], [4, 0]]; const c = p[Math.floor(r * p.length)]; s1 = c[0]; s2 = c[1];
+                }
+
+                const parts = val.split(/\s*[:\-]\s*/);
+                if (parts.length === 2 && parseFloat(parts[1]) > parseFloat(parts[0])) {
+                    [s1, s2] = [s2, s1];
+                }
+            } else {
+                s1 = Math.floor(Math.random() * 4);
+                s2 = Math.floor(Math.random() * 3);
+            }
+
+            return `<div class="score-container"><span class="score-box">${s1}</span><span class="score-sep">:</span><span class="score-box">${s2}</span></div>`;
+        };
+
+        function renderWithJSON(data) {
+            document.getElementById('currentDateHeader').textContent = '-';
+            document.getElementById('displayDateText').textContent = data.display_date || '';
+            document.getElementById('marqueeContainer').innerHTML = `<p>${data.marquee_text || ''}</p>`;
+
+            let html = '';
+            data.leagues.forEach(league => {
+                html += `
+                <table class="league-table">
+                    <thead>
+                        <tr><th colspan="3" class="league-name-header">${league.name}</th></tr>
+                        <tr>
+                            <th class="col-header date-col">Tanggal & Waktu</th>
+                            <th class="col-header match-col">Pertandingan</th>
+                            <th class="col-header score-col">Prediksi Skor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${league.matches.map(m => `
+                            <tr>
+                                <td>${m.time}</td>
+                                <td>${formatMatchText(m.teams)}</td>
+                                <td>${formatScoreText(m.score)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>`;
+            });
+            document.getElementById('dataContent').innerHTML = html;
+        }
+
+        function renderWithHTMLSnippet(htmlString) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlString, 'text/html');
+            const targetContainer = document.getElementById('dataContent');
+
+            // --- PEMBERSIHAN DATA ---
+            doc.querySelectorAll('script, style, iframe, noscript, nav, header, footer').forEach(s => s.remove());
+
+            // Update Tanggal Header
+            if (window.currentScheduleTitle) {
+                document.getElementById('displayDateText').textContent = window.currentScheduleTitle;
+            }
+
+            // Ekstrak Marquee
+            const marqueeP = doc.querySelector('.marquee p, marquee');
+            if (marqueeP) {
+                document.getElementById('marqueeContainer').innerHTML = `<p>${marqueeP.textContent}</p>`;
+            }
+
+            // FUNGSI HELPER: Membuat tabel dengan gaya premium
+            const createLeagueTable = (leagueName, matchesHtml) => {
+                // Hitung jumlah pertandingan
+                const matchCount = (matchesHtml.match(/<tr>/g) || []).length;
+
+                const table = document.createElement('table');
+                table.className = 'league-table';
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th colspan="3" class="league-name-header">
+                                <div class="league-header-container">
+                                    <span class="league-title-text"><i class="ph-fill ph-trophy"></i> ${leagueName}</span>
+                                    <span class="league-badge">${matchCount} MATCHES</span>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th class="col-header date-col">Tanggal & Waktu</th>
+                            <th class="col-header match-col">Pertandingan</th>
+                            <th class="col-header score-col">Prediksi Skor</th>
+                        </tr>
+                    </thead>
+                    <tbody>${matchesHtml}</tbody>
+                `;
+                return table;
+            };
+
+            // --- Hapus fungsi lokal karena sudah dipindah ke global ---
+
+            // Fungsi untuk memvalidasi apakah tanggal pertandingan adalah hari ini atau mendatang
+            const isValidDate = (dateStr) => {
+                try {
+                    const match = dateStr.match(/(\d{1,2})\/(\d{1,2})/);
+                    if (!match) return true; // Jika format tidak dikenal, tampilkan saja
+
+                    const d = parseInt(match[1]);
+                    const m = parseInt(match[2]);
+
+                    const now = new Date();
+                    const currentD = now.getDate();
+                    const currentM = now.getMonth() + 1;
+
+                    // Validasi: Bulan mendatang atau (Bulan sama dan hari ini/mendatang)
+                    if (m > currentM) return true;
+                    if (m === currentM && d >= currentD) return true;
+
+                    // Kasus khusus pergantian tahun (misal: sekarang Des, data sudah Jan)
+                    if (currentM === 12 && m === 1) return true;
+
+                    return false; // Tanggal sudah lewat
+                } catch (e) { return true; }
+            };
+
+            targetContainer.innerHTML = '';
+            const matchRegistry = new Set();
+            const leagueOrder = [];
+            const leagueMatches = {}; // leagueName -> rowsHtml[]
+
+            const sourceTables = Array.from(doc.querySelectorAll('table')).filter(t => t.innerText.includes('VS'));
+
+            if (sourceTables.length > 0) {
+                sourceTables.forEach(table => {
+                    const rows = Array.from(table.querySelectorAll('tr'));
+                    let currentLeague = "JADWAL PERTANDINGAN";
+
+                    rows.forEach((row, idx) => {
+                        const cells = Array.from(row.querySelectorAll('td, th'));
+                        if (cells.length === 3 && (cells[1].innerText.includes('VS') || cells[2].innerText.includes(':') || cells[2].innerText.includes('-'))) {
+                            const matchTime = cells[0].innerText.trim();
+                            const matchText = cells[1].innerText.trim();
+                            const scoreText = cells[2].innerText.trim();
+
+                            if (isValidDate(matchTime)) {
+                                const teams = matchText.split(/\s+VS\s+/i).map(t => cleanTeam(t).toLowerCase()).sort();
+                                const key = `${teams.join('|')}@${normalizeTime(matchTime)}`;
+
+                                if (!matchRegistry.has(key)) {
+                                    matchRegistry.add(key);
+                                    if (!leagueMatches[currentLeague]) {
+                                        leagueMatches[currentLeague] = [];
+                                        leagueOrder.push(currentLeague);
+                                    }
+                                    leagueMatches[currentLeague].push(`<tr><td>${matchTime}</td><td>${formatMatchText(matchText)}</td><td>${formatScoreText(scoreText)}</td></tr>`);
+                                }
+                            }
+                        } else if (idx === 0 || cells.length === 1) {
+                            const txt = row.textContent.trim().toUpperCase();
+                            if (txt.length > 5 && !txt.includes('BOLA') && !txt.includes('DATE') && !txt.includes('TIME')) {
+                                currentLeague = txt;
+                            }
+                        }
+                    });
+                });
+            }
+
+            // Fallback parsing if no tables found or empty
+            if (leagueOrder.length === 0) {
+                const fullText = doc.body.innerText;
+                // Regex: Tanggal VS Tim Skor (Lookahead untuk mencegah mencaplok liga/tanggal selanjutnya)
+                const matchRegex = /(\d{1,2}\/\d{1,2}\s+\d{1,2}:\d{2})\s*(?:WIB)?\s+(.+?)\s+VS\s+(.+?)\s+([\d\/\.\- ]+[:\-][\d\/\.\- ]+|[\d]+\-[\d]+)/gi;
+                let m;
+                let lastIdx = 0;
+                let lastKnownLeague = "PREDIKSI BOLA TERKINI";
+
+                while ((m = matchRegex.exec(fullText)) !== null) {
+                    // Cari Liga di teks sebelum match ini
+                    let textBefore = fullText.substring(lastIdx, m.index).trim();
+                    let lines = textBefore.split('\n');
+                    let candidates = lines.filter(l => l.trim().length > 5 && !l.includes('VS') && !l.includes('BOLA') && !/\d{1,2}\/\d{1,2}/.test(l));
+
+                    if (candidates.length > 0) lastKnownLeague = candidates[candidates.length - 1].trim().toUpperCase();
+
+                    const matchTime = m[1];
+                    const matchText = `${m[2]} VS ${m[3]}`;
+                    const scoreText = m[4].trim();
+
+                    if (isValidDate(matchTime)) {
+                        const teams = [m[2], m[3]].map(t => cleanTeam(t).toLowerCase()).sort();
+                        const key = `${teams.join('|')}@${normalizeTime(matchTime)}`;
+
+                        if (!matchRegistry.has(key)) {
+                            matchRegistry.add(key);
+                            if (!leagueMatches[lastKnownLeague]) {
+                                leagueMatches[lastKnownLeague] = [];
+                                leagueOrder.push(lastKnownLeague);
+                            }
+                            leagueMatches[lastKnownLeague].push(`<tr><td>${matchTime}</td><td>${formatMatchText(matchText)}</td><td>${formatScoreText(scoreText)}</td></tr>`);
+                        }
+                    }
+                    lastIdx = m.index + m[0].length;
+                }
+            }
+
+            // Render all consolidated leagues
+            leagueOrder.forEach(name => {
+                const matches = leagueMatches[name];
+                if (matches && matches.length > 0) {
+                    const table = document.createElement('table');
+                    table.className = 'league-table';
+                    table.innerHTML = `
+                        <thead>
+                            <tr>
+                                <th colspan="3" class="league-name-header">
+                                    <div class="league-header-container">
+                                        <span class="league-title-text"><i class="ph-fill ph-trophy"></i> ${name}</span>
+                                        <span class="league-badge">${matches.length} MATCHES</span>
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th class="col-header date-col">Tanggal & Waktu</th>
+                                <th class="col-header match-col">Pertandingan</th>
+                                <th class="col-header score-col">Prediksi Skor</th>
+                            </tr>
+                        </thead>
+                        <tbody>${matches.join('')}</tbody>
+                    `;
+                    targetContainer.appendChild(table);
+                }
+            });
+
+            if (leagueOrder.length === 0) {
+                targetContainer.innerHTML = '<div style="text-align:center; padding:50px; color:#94a3b8;"><i class="ph ph-warning-circle" style="font-size:2.5rem; display:block; margin-bottom:10px;"></i>Data tidak ditemukan. Silakan cek link acuan.</div>';
+            }
+        }
+
+
+        /**
+         * Fungsi untuk menyalin script HTML yang sudah dirender dengan tampilan SAMA PERSIS (Termasuk Header & Tombol Refresh)
+         * Menggunakan !important agar tidak terpengaruh CSS dari website lain
+         */
+        function copyGeneratedScript() {
+            const dateText = document.getElementById('displayDateText').innerText;
+            const marqueeText = document.getElementById('marqueeContainer').innerText;
+            const contentHtml = document.getElementById('dataContent').innerHTML;
+
+            const finalScript = `
+<!-- START WDBOS PREMIUM JADWAL AUTO-REFRESH -->
+<div id="wdbos-root" class="wdbos-wrapper">
+    <div class="wdbos-container">
+        <div id="wdbos-date" class="wdbos-date">${dateText}</div>
+        <div class="wdbos-marquee">
+            <span>${marqueeText}</span>
+        </div>
+        <div id="wdbos-content" class="wdbos-tables">
+            ${contentHtml}
+        </div>
+    </div>
+</div>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap');
+    @import url('https://unpkg.com/@phosphor-icons/web@2.0.3/src/fill/index.css');
+    
+    .wdbos-wrapper * { box-sizing: border-box !important; -webkit-font-smoothing: antialiased; }
+    .wdbos-wrapper { background-color: #060b18 !important; padding: 30px 10px !important; font-family: 'Outfit', sans-serif !important; color: #ffffff !important; }
+    .wdbos-container { max-width: 1000px !important; margin: 0 auto !important; background: rgba(15, 23, 42, 0.95) !important; padding: 25px !important; border-radius: 24px !important; border: 1px solid rgba(255,255,255,0.1) !important; box-shadow: 0 40px 80px rgba(0,0,0,0.5) !important; }
+    
+    .wdbos-date { margin-bottom: 20px !important; font-size: 1.4rem !important; font-weight: 900 !important; color: #fff !important; text-align: center !important; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .wdbos-marquee { background: rgba(0, 0, 0, 0.2) !important; border: 1px solid rgba(255,255,255,0.05) !important; padding: 12px 0 !important; margin-bottom: 25px !important; overflow: hidden !important; white-space: nowrap !important; border-radius: 12px !important; }
+    .wdbos-marquee span { color: #c3ed07 !important; font-weight: 800 !important; font-size: 0.95rem !important; display: inline-block !important; padding-left: 100% !important; animation: wdbos-anim 20s linear infinite !important; text-transform: uppercase !important; }
+    @keyframes wdbos-anim { 0% { transform: translateX(0); } 100% { transform: translateX(-200%); } }
+    
+    .league-table { width: 100% !important; border-collapse: separate !important; border-spacing: 0 !important; margin-bottom: 30px !important; background: #ffffff !important; border-radius: 20px !important; overflow: hidden !important; table-layout: fixed !important; border: 1px solid rgba(255,255,255,0.1) !important; box-shadow: 0 15px 35px rgba(0,0,0,0.3) !important; }
+    .league-name-header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important; color: #fff !important; padding: 18px !important; text-align: center !important; border: none !important; }
+    .league-header-container { display: flex; align-items: center; justify-content: center; gap: 12px; }
+    .league-title-text { font-size: 1.1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; gap: 8px; }
+    .league-badge { background: rgba(255, 255, 255, 0.1); padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; color: #c3ed07; }
+    
+    .col-header { background: #f8fafc !important; color: #2563eb !important; font-weight: 900 !important; font-size: 0.75rem !important; text-transform: uppercase !important; padding: 14px 10px !important; border-bottom: 1px solid rgba(0,0,0,0.1) !important; border-right: 1px solid rgba(0,0,0,0.05) !important; }
+    .col-header:last-child { border-right: none !important; }
+    
+    .league-table td { background: #fff !important; color: #334155 !important; padding: 15px 8px !important; font-size: 0.9rem !important; font-weight: 600 !important; text-align: center !important; vertical-align: middle !important; border-bottom: 1px solid rgba(0,0,0,0.08) !important; border-right: 1px solid rgba(0,0,0,0.04) !important; }
+    .league-table td:last-child { border-right: none !important; }
+    
+    .match-cell-content { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
+    .team-wrapper { flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .team-wrapper.home { flex-direction: row-reverse; text-align: right; }
+    .team-icon { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; }
+    .team-name { flex: 1; overflow-wrap: break-word; line-height: 1.2; }
+    .vs-badge { background: #f1f5f9; color: #64748b; padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 900; min-width: 40px; border: 1px solid #e2e8f0; }
+    
+    .score-container { display: flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; }
+    .score-box { background: #f0f7ff !important; color: #2563eb !important; padding: 6px 10px !important; border-radius: 8px !important; font-weight: 900 !important; font-size: 1.1rem !important; border: 1px solid #dbeafe !important; min-width: 40px !important; text-align: center !important; }
+    .score-sep { color: #2563eb !important; font-weight: 900 !important; opacity: 0.5 !important; }
+    .score-display { background: #f0f7ff; color: #2563eb; padding: 6px 12px; border-radius: 10px; font-weight: 900; font-size: 1.1rem; border: 1px solid #dbeafe; min-width: 55px; display: inline-block; }
+
+    @media (max-width: 768px) {
+        .wdbos-wrapper { padding: 15px 5px !important; }
+        .wdbos-container { padding: 12px !important; border-radius: 14px !important; width: 100% !important; }
+        .wdbos-date { font-size: 1.05rem !important; line-height: 1.35 !important; margin-bottom: 16px !important; }
+        .wdbos-marquee { padding: 10px 0 !important; margin-bottom: 18px !important; }
+        .wdbos-marquee span { font-size: 0.78rem !important; letter-spacing: 0.8px !important; }
+        
+        /* Lokir Lebar Kolom Ekstrem untuk Ruang Tim Maksimal */
+        .league-table { table-layout: fixed !important; width: 100% !important; }
+        .date-col { width: 15% !important; } 
+        .match-col { width: 70% !important; } 
+        .score-col { width: 15% !important; }
+        .league-header-container { gap: 8px !important; flex-wrap: wrap !important; }
+        
+        .league-table td { 
+            padding: 10px 4px !important; 
+            font-size: 0.65rem !important; 
+            letter-spacing: -0.2px !important;
+        }
+
+        .score-container { gap: 3px !important; }
+        .score-box { padding: 3px 5px !important; font-size: 0.8rem !important; min-width: 25px !important; }
+        .score-sep { font-size: 0.7rem !important; }
+        
+        /* Meringkas Tanggal & Waktu */
+        .league-table td:first-child { 
+            font-size: 0.58rem !important; 
+            line-height: 1 !important;
+            word-break: break-all !important;
+            padding-left: 2px !important;
+        }
+        
+        .team-name { 
+            font-size: 0.68rem !important; 
+            font-weight: 800 !important; 
+            line-height: 1.1 !important;
+            word-break: normal !important; /* Jangan putus per huruf */
+            overflow-wrap: break-word !important;
+        }
+        
+        .vs-badge { 
+            min-width: 25px !important; 
+            padding: 2px 2px !important; 
+            font-size: 0.5rem !important;
+            margin: 0 !important;
+            transform: scale(0.9);
+        }
+        
+        .score-display { 
+            min-width: 32px !important; 
+            padding: 3px 2px !important; 
+            font-size: 0.75rem !important; 
+            border-radius: 5px !important;
+        }
+        
+        .match-cell-content { gap: 1px !important; }
+        .team-wrapper { gap: 2px !important; }
+        .team-icon, .league-badge { display: none !important; }
+        .league-title-text { font-size: 0.75rem !important; letter-spacing: 0.5px !important; }
+        .league-name-header { padding: 10px 5px !important; }
+    }
+
+    @media (max-width: 480px) {
+        .wdbos-wrapper { padding: 12px 4px !important; }
+        .wdbos-container { padding: 10px !important; }
+        .wdbos-date { font-size: 0.95rem !important; }
+        .league-title-text { font-size: 0.7rem !important; }
+    }
+</style>
+
+<script>
+let wL = null;
+async function wdbosUpdate() {
+    try {
+        const res = await fetch('https://corsproxy.io/?' + encodeURIComponent('${CONFIG.DATA_URL}?t=' + Date.now()));
+        const h = await res.text();
+        const p = new DOMParser();
+        const d = p.parseFromString(h, 'text/html');
+        
+        const dT = Array.from(d.querySelectorAll('h1, h2, h3, h4, a, b, strong')).find(el => {
+            const t = el.textContent.toUpperCase();
+            return t.includes('PREDIKSI') && t.includes('BOLA') && /\d/.test(t) && !t.includes('JADWAL');
+        });
+        if(!dT) return;
+
+        const sT = dT.innerText.trim();
+        let pL = dT.tagName === 'A' ? dT : dT.querySelector('a') || dT.closest('a');
+        
+        // Skip link credits
+        if (pL && (pL.href.includes('Sabercoding.com') || pL.innerText.includes('Koloni4d'))) pL = null;
+
+        let fD = h;
+        if (pL && pL.href && !pL.href.includes(window.location.hostname)) {
+            const sR = await fetch('https://corsproxy.io/?' + encodeURIComponent(pL.href));
+            if (sR.ok) fD = await sR.text();
+        }
+
+        const cH = btoa(unescape(encodeURIComponent(fD + sT))).substring(0, 32);
+        if(cH !== wL) {
+            wL = cH;
+            document.getElementById('wdbos-date').innerText = sT;
+            
+            const sD = new DOMParser().parseFromString(fD, 'text/html');
+            const cT = (t) => t.trim().replace(/\([nN]\)/g, '').replace(/\s*[\/\-]\s*\d+\s*$/, '').replace(/\s+/g, ' ').trim();
+            const nT = (t) => t.trim().replace(/[\.\s]+/g, ':').replace(/(\d{2}):(\d{2})/, '$1:$2').trim();
+            const gI = (n) => { const w = n.split(' '); return w.length > 1 ? (w[0][0].toUpperCase() + w[1][0].toUpperCase()) : n.substring(0, 2).toUpperCase(); };
+            
+            const tables = Array.from(sD.querySelectorAll('table')).filter(t => t.innerText.includes('VS'));
+            const matchReg = new Set();
+            const leagueOrder = [];
+            const leagueMatches = {};
+            
+            tables.forEach(table => {
+                const rs = Array.from(table.querySelectorAll('tr'));
+                let currentLeague = "JADWAL BOLA";
+                rs.forEach((r, i) => {
+                    const cs = Array.from(r.querySelectorAll('td, th'));
+                    if (cs.length === 3 && (cs[1].innerText.includes('VS') || cs[2].innerText.includes(':') || cs[2].innerText.includes('-'))) {
+                        const time = cs[0].innerText.trim();
+                        const match = cs[1].innerText.trim();
+                        const score = cs[2].innerText.trim();
+                        const teams = match.split(/\s+VS\s+/i).map(x => cT(x).toLowerCase()).sort();
+                        const key = teams.join('|') + '@' + nT(time);
+                        if (!matchReg.has(key)) {
+                            matchReg.add(key);
+                            if (!leagueMatches[currentLeague]) {
+                                leagueMatches[currentLeague] = [];
+                                leagueOrder.push(currentLeague);
+                            }
+                            const pX = match.split(/\s+VS\s+/i); const hX = cT(pX[0]), aX = cT(pX[1]);
+                            const mUI = '<div class="match-cell-content"><div class="team-wrapper home"><div class="team-icon">' + gI(hX) + '</div><span class="team-name">' + hX + '</span></div><span class="vs-badge">VS</span><div class="team-wrapper away"><div class="team-icon">' + gI(aX) + '</div><span class="team-name">' + aX + '</span></div></div>';
+                            
+                            // Integrasi Prediksi Skor Variabel
+                            let s1 = 1, s2 = 0;
+                            let v = score.replace(/(\d+)\s+(\d+)\/(\d+)/g, (m, p1, p2, p3) => parseFloat(p1) + (p2/p3)).replace(/(\d+)\/(\d+)/g, (m, p1, p2) => p1/p2);
+                            const nX = v.match(/\d+(\.\d+)?/g);
+                            if(nX) {
+                                const n = parseFloat(nX[0]), r = Math.random();
+                                if (n === 0) { const p = [[0,0], [1,1], [2,2]]; const c = p[Math.floor(r * p.length)]; s1 = c[0]; s2 = c[1]; }
+                                else if (n <= 0.5) { const p = [[1,0], [2,1], [1,1], [0,0]]; const c = p[Math.floor(r * p.length)]; s1 = c[0]; s2 = c[1]; }
+                                else if (n <= 1.0) { const p = [[2,1], [2,0], [1,0], [3,1]]; const c = p[Math.floor(r * p.length)]; s1 = c[0]; s2 = c[1]; }
+                                else if (n <= 1.5) { const p = [[2,0], [3,1], [3,0]]; const c = p[Math.floor(r * p.length)]; s1 = c[0]; s2 = c[1]; }
+                                else { s1 = 3; s2 = 0; }
+                                const sPs = v.split(/\s*[:\-]\s*/); if (sPs.length === 2 && parseFloat(sPs[1]) > parseFloat(sPs[0])) { [s1, s2] = [s2, s1]; }
+                            }
+                            const sUI = '<div class="score-container"><span class="score-box">' + s1 + '</span><span class="score-sep">:</span><span class="score-box">' + s2 + '</span></div>';
+                            
+                            leagueMatches[currentLeague].push('<tr><td>' + time + '</td><td>' + mUI + '</td><td>' + sUI + '</td></tr>');
+                        }
+                    } else if (i === 0 || cs.length === 1) {
+                        const tx = r.textContent.trim().toUpperCase();
+                        if (tx.length > 5 && !tx.includes('BOLA')) currentLeague = tx;
+                    }
+                });
+            });
+
+            let finalHtml = '';
+            // FALLBACK: Regex parsing for text-only data
+            if (leagueOrder.length === 0) {
+                const ft = sD.body.innerText;
+                const re = /(\d{1,2}\/\d{1,2}\s+\d{1,2}:\d{2})\s*(?:WIB)?\s+(.+?)\s+VS\s+(.+?)\s+([\d\/\.\- ]+[:\-][\d\/\.\- ]+|[\d]+\-[\d]+)/gi;
+                let m;
+                let lI = 0;
+                let cL = "PREDIKSI BOLA";
+                while ((m = re.exec(ft)) !== null) {
+                    let before = ft.substring(lI, m.index).trim();
+                    let lines = before.split('\n');
+                    let candidates = lines.filter(l => l.trim().length > 5 && !l.includes('VS') && !/\d{1,2}\/\d{1,2}/.test(l));
+                    if (candidates.length > 0) cL = candidates[candidates.length - 1].trim().toUpperCase();
+
+                    const time = m[1].trim(), score = m[4].trim();
+                    const hX = cT(m[2]), aX = cT(m[3]);
+                    const teams = [hX.toLowerCase(), aX.toLowerCase()].sort();
+                    const key = teams.join('|') + '@' + time;
+                    if (!matchReg.has(key)) {
+                        matchReg.add(key);
+                        if (!leagueMatches[cL]) { leagueMatches[cL] = []; leagueOrder.push(cL); }
+                        const mUI = '<div class="match-cell-content"><div class="team-wrapper home"><div class="team-icon">' + gI(hX) + '</div><span class="team-name">' + hX + '</span></div><span class="vs-badge">VS</span><div class="team-wrapper away"><div class="team-icon">' + gI(aX) + '</div><span class="team-name">' + aX + '</span></div></div>';
+                        
+                        let fS = score.replace(/(\d+)\s+(\d+)\/(\d+)/g, (m, p1, p2, p3) => parseFloat(p1) + (p2/p3))
+                                       .replace(/(\d+)\/(\d+)/g, (m, p1, p2) => p1/p2);
+                        
+                        let s1 = 1, s2 = 0;
+                        const nX = fS.match(/\d+(\.\d+)?/g);
+                        if(nX) {
+                            const n = parseFloat(nX[0]), r = Math.random();
+                            if (n === 0) { const p = [[0,0], [1,1], [2,2]]; const c = p[Math.floor(r * p.length)]; s1 = c[0]; s2 = c[1]; }
+                            else if (n <= 0.5) { const p = [[1,0], [2,1], [1,1], [0,0]]; const c = p[Math.floor(r * p.length)]; s1 = c[0]; s2 = c[1]; }
+                            else if (n <= 1.0) { const p = [[2,1], [2,0], [1,0], [3,1]]; const c = p[Math.floor(r * p.length)]; s1 = c[0]; s2 = c[1]; }
+                            else if (n <= 1.5) { const p = [[2,0], [3,1], [3,0]]; const c = p[Math.floor(r * p.length)]; s1 = c[0]; s2 = c[1]; }
+                            else { s1 = 3; s2 = 1; }
+                            const sPs = fS.split(/\s*[:\-]\s*/); if (sPs.length === 2 && parseFloat(sPs[1]) > parseFloat(sPs[0])) { [s1, s2] = [s2, s1]; }
+                        }
+                        const sHTML = '<div class="score-container"><span class="score-box">' + s1 + '</span><span class="score-sep">:</span><span class="score-box">' + s2 + '</span></div>';
+                        
+                        leagueMatches[cL].push('<tr><td>' + time + '</td><td>' + mUI + '</td><td>' + sHTML + '</td></tr>');
+                    }
+                    lI = m.index + m[0].length;
+                }
+            }
+
+            leagueOrder.forEach(name => {
+                finalHtml += '<table class="league-table"><thead><tr><th colspan="3" class="league-name-header"><div class="league-header-container"><span class="league-title-text"><i class="ph-fill ph-trophy"></i> '+name+'</span></div></th></tr><tr><th class="col-header date-col">Waktu</th><th class="col-header match-col">Pertandingan</th><th class="col-header score-col">Skor</th></tr></thead><tbody>' + leagueMatches[name].join('') + '</tbody></table>';
+            });
+            if(finalHtml) document.getElementById('wdbos-content').innerHTML = finalHtml;
+        }
+    } catch(e) {}
+}
+setInterval(wdbosUpdate, 30000);
+wdbosUpdate();
+<\\/script>
+<!-- END WDBOS PREMIUM JADWAL -->
+`.trim().replace('<\\/script>', '</' + 'script');
+
+            navigator.clipboard.writeText(finalScript).then(() => {
+                const btn = document.getElementById('copyBtn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="ph-bold ph-check"></i> BERHASIL DISALIN!';
+                btn.style.background = '#10b981';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = 'var(--accent-yellow)';
+                }, 2000);
+            });
+        }
+
+        // Init
+        document.getElementById('copyBtn').addEventListener('click', copyGeneratedScript);
+
+        document.getElementById('refreshBtnMain').addEventListener('click', function () {
+            const btn = this;
+            const icon = document.getElementById('refreshIcon');
+            const originalHTML = btn.innerHTML;
+
+            // Efek Visual Menekan
+            btn.style.transform = 'scale(0.95)';
+            btn.style.background = 'rgba(255, 255, 255, 0.2)';
+
+            // Berikan feedback visual "Sedang Memperbarui"
+            btn.innerHTML = `<i class="ph-bold ph-arrows-clockwise ph-spin"></i> MEMPERBARUI DATA...`;
+            btn.disabled = true;
+
+            updateDashboard(true).finally(() => {
+                setTimeout(() => {
+                    btn.style.transform = 'scale(1)';
+                    btn.style.background = 'rgba(255, 255, 255, 0.1)';
+                    btn.innerHTML = `<i class="ph-bold ph-check-circle"></i> DATA DIPERBARUI!`;
+                    btn.style.borderColor = '#10b981';
+
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.disabled = false;
+                        btn.style.borderColor = '#444';
+                    }, 2000);
+                }, 1000);
+            });
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // BOOT INSTAN: Cek cache LocalStorage dulu sebelum fetch live
+            const cachedData = localStorage.getItem('wdbos_last_data');
+            const cachedTitle = localStorage.getItem('wdbos_last_title');
+            const cachedHash = localStorage.getItem('wdbos_last_hash');
+
+            if (cachedData) {
+                window.currentScheduleTitle = cachedTitle;
+                processIncomingData(cachedData);
+                lastDataHash = cachedHash;
+                console.log("INSTANT LOAD: Data dimuat dari memori lokal.");
+            }
+
+            updateDashboard();
+            if (CONFIG.AUTO_REFRESH) {
+                setInterval(updateDashboard, CONFIG.POLLING_INTERVAL);
+            }
+        });
+    </script>
+</body>
+
+</html>
