@@ -799,12 +799,44 @@
     <script>
         const CONFIG = {
             DATA_URL: 'https://shortq.xyz/prediksibola',
-            PROXY_URL: 'https://corsproxy.io/?', // Proxy yang lebih cepat & stabil
+            PROXY_URL: '/api/prediksi?url=', // Proxy internal agar aman di Vercel
             POLLING_INTERVAL: 15000,
             AUTO_REFRESH: true
         };
 
         let lastDataHash = null;
+
+        async function fetchThroughProxy(url, options = {}) {
+            const proxyUrl = CONFIG.PROXY_URL + encodeURIComponent(url);
+            const response = await fetch(proxyUrl, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'text/html,application/json;q=0.9,*/*;q=0.8'
+                },
+                cache: 'no-store',
+                ...options
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text().catch(() => '');
+                throw new Error(errorText || `Proxy request gagal (${response.status})`);
+            }
+
+            return response.text();
+        }
+
+        function renderErrorState(message = 'Gagal memuat data terbaru. Silakan coba lagi beberapa saat.') {
+            const target = document.getElementById('dataContent');
+            if (!target) return;
+
+            target.innerHTML = `
+                <div style="text-align:center; padding:40px 20px; color:#94a3b8;">
+                    <i class="ph ph-warning-circle" style="font-size:2.5rem; display:block; margin-bottom:12px; color:#facc15;"></i>
+                    <div style="font-weight:700; color:#e2e8f0; margin-bottom:8px;">Sumber data sedang tidak merespons</div>
+                    <div style="max-width:520px; margin:0 auto; line-height:1.6;">${message}</div>
+                </div>
+            `;
+        }
 
         /**
          * Fungsi untuk mengambil dan memproses data secara otomatis
@@ -812,12 +844,7 @@
          */
         async function updateDashboard(force = false) {
             try {
-                // WAJIB PAKAI PROXY UNTUK BYPASS CORS
-                const targetUrl = CONFIG.PROXY_URL + encodeURIComponent(`${CONFIG.DATA_URL}?t=${Date.now()}`);
-                const response = await fetch(targetUrl);
-                if (!response.ok) throw new Error('Failed to fetch source page');
-
-                const htmlText = await response.text();
+                const htmlText = await fetchThroughProxy(`${CONFIG.DATA_URL}?t=${Date.now()}`);
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(htmlText, 'text/html');
 
@@ -851,15 +878,13 @@
                 let finalData = null;
                 if (prediksiLink && prediksiLink.href && !prediksiLink.href.includes(window.location.hostname)) {
                     console.log('SINKRONISASI AKTIF: ' + scheduleTitle);
-                    const subUrl = CONFIG.PROXY_URL + encodeURIComponent(prediksiLink.href);
 
                     // Gunakan controller untuk mencegah fetch yang terlalu lama (timeout 8 detik)
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => controller.abort(), 8000);
 
                     try {
-                        const subRes = await fetch(subUrl, { signal: controller.signal });
-                        if (subRes.ok) finalData = await subRes.text();
+                        finalData = await fetchThroughProxy(prediksiLink.href, { signal: controller.signal });
                     } catch (e) { console.log("Fetch timeout/error."); }
                     clearTimeout(timeoutId);
                 }
@@ -892,7 +917,9 @@
                         const localData = await localRes.json();
                         renderWithJSON(localData);
                         lastDataHash = "fallback-initial"; // Tandai agar tidak terus-menerus mencoba fallback
-                    } catch (e) { }
+                    } catch (e) {
+                        renderErrorState('Saat dibuka dari Vercel, data sekarang diambil lewat endpoint internal. Jika pesan ini tetap muncul, cek function `/api/prediksi` dan redeploy project.');
+                    }
                 }
                 // Jika sudah ada data live yang tampil, biarkan saja (jangan ditimpa data lama)
             }
