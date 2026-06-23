@@ -806,6 +806,8 @@
 
         let lastDataHash = null;
 
+        const SOURCE_DATE_TITLE_REGEX = /(PREDIKSI BOLA\s+\d{1,2}\s*-\s*\d{1,2}\s+[A-Z]+\s+\d{4}|JADWAL BOLA\s+\d{1,2}\s*-\s*\d{1,2}\s+[A-Z]+\s+\d{4})/i;
+
         async function fetchThroughProxy(url, options = {}) {
             const proxyUrl = CONFIG.PROXY_URL + encodeURIComponent(url);
             const response = await fetch(proxyUrl, {
@@ -845,51 +847,9 @@
         async function updateDashboard(force = false) {
             try {
                 const htmlText = await fetchThroughProxy(`${CONFIG.DATA_URL}?t=${Date.now()}`);
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(htmlText, 'text/html');
-
-                // 1. CARI PANEL TARGET: Judul panel biasanya pendek (di bawah 100 karakter)
-                const allElements = Array.from(doc.querySelectorAll('h1, h2, h3, h4, b, strong, a, span, div'));
-                const dateTarget = allElements.find(el => {
-                    const txt = el.textContent.trim().toUpperCase();
-                    return txt.includes('PREDIKSI') && txt.includes('BOLA') && /\d/.test(txt) && !txt.includes('JADWAL') && txt.length < 100;
-                }) || allElements.find(el => el.textContent.toUpperCase().includes('JADWAL BOLA 27'));
-
-                if (!dateTarget) {
-                    console.warn('Judul Prediksi tidak ditemukan.');
-                    return;
-                }
-
-                const scheduleTitle = dateTarget.innerText.trim();
-
-                // 2. AUTO-CLICK: Cari link di panel tersebut (Skip jika link menuju Sabercoding/Link Umum)
-                let prediksiLink = dateTarget.tagName === 'A' ? dateTarget : dateTarget.querySelector('a');
-                if (!prediksiLink) {
-                    prediksiLink = dateTarget.closest('a') ||
-                        dateTarget.parentElement?.querySelector('a[href*="http"]') ||
-                        dateTarget.closest('div')?.querySelector('a[href*="http"]');
-                }
-
-                // Validasi link: Jangan klik link credits/branding yang tidak berisi data
-                if (prediksiLink && (prediksiLink.href.includes('Sabercoding.com') || prediksiLink.innerText.includes('Koloni4d'))) {
-                    prediksiLink = null;
-                }
-
-                let finalData = null;
-                if (prediksiLink && prediksiLink.href && !prediksiLink.href.includes(window.location.hostname)) {
-                    console.log('SINKRONISASI AKTIF: ' + scheduleTitle);
-
-                    // Gunakan controller untuk mencegah fetch yang terlalu lama (timeout 8 detik)
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 8000);
-
-                    try {
-                        finalData = await fetchThroughProxy(prediksiLink.href, { signal: controller.signal });
-                    } catch (e) { console.log("Fetch timeout/error."); }
-                    clearTimeout(timeoutId);
-                }
-
-                if (!finalData) finalData = htmlText;
+                const parsedData = parseSourceData(htmlText);
+                const finalData = parsedData ? JSON.stringify(parsedData) : htmlText;
+                const scheduleTitle = parsedData?.display_date || 'PREDIKSI BOLA TERKINI';
 
                 // 3. UPDATE HEADER UI (Tanpa Tembok Teks)
                 window.currentScheduleTitle = scheduleTitle;
@@ -950,6 +910,146 @@
             .replace(/\s+/g, ' ')
             .trim();
         const normalizeTime = (t) => t.trim().replace(/[\.\s]+/g, ':').replace(/(\d{2}):(\d{2})/, '$1:$2').trim();
+        const cleanLeagueName = (t) => t.replace(/\s+/g, ' ').replace(/^[|,;:.\-–—\s]+|[|,;:.\-–—\s]+$/g, '').trim();
+        const buildMatchKey = (home, away, time) => `${cleanTeam(home).toLowerCase()}__${cleanTeam(away).toLowerCase()}@${normalizeTime(time)}`;
+
+        const extractSection = (text, startLabel, endLabel = null) => {
+            const upper = text.toUpperCase();
+            const startIndex = upper.indexOf(startLabel.toUpperCase());
+            if (startIndex === -1) return '';
+
+            const endIndex = endLabel ? upper.indexOf(endLabel.toUpperCase(), startIndex + startLabel.length) : -1;
+            return text.slice(startIndex, endIndex === -1 ? text.length : endIndex).trim();
+        };
+
+        const parseMatchSegment = (segment) => {
+            const numberPattern = '\\d+(?:\\s+\\d+\\/\\d+|\\/\\d+)?';
+            const scorePattern = `${numberPattern}\\s*[:\\-]\\s*${numberPattern}`;
+            const matchPattern = new RegExp(`^(\\d{1,2}\\/\\d{1,2}\\s+\\d{1,2}:\\d{2}\\s*(?:WIB)?)\\s+(.+?)\\s+vs\\s+(.+?)\\s+(${scorePattern})(?:\\s+([\\s\\S]*))?$`, 'i');
+            const match = segment.match(matchPattern);
+
+            if (!match) return null;
+
+            return {
+                time: match[1].trim(),
+                homeTeam: cleanTeam(match[2]),
+                awayTeam: cleanTeam(match[3]),
+                score: match[4].trim(),
+                trailingLeague: cleanLeagueName(match[5] || '')
+            };
+        };
+
+        const parseLeagueSection = (sectionText, headingRegex, fallbackLeague) => {
+            if (!sectionText) return [];
+
+            const sectionBody = sectionText.replace(headingRegex, '').trim();
+            const dateRegex = /\d{1,2}\/\d{1,2}\s+\d{1,2}:\d{2}\s*(?:WIB)?/gi;
+            const datePositions = [];
+            let match;
+
+            while ((match = dateRegex.exec(sectionBody)) !== null) {
+                datePositions.push(match.index);
+            }
+
+            if (datePositions.length === 0) return [];
+
+            const groupedMatches = new Map();
+            const leagueOrder = [];
+
+            const pushMatch = (leagueName, item) => {
+                if (!groupedMatches.has(leagueName)) {
+                    groupedMatches.set(leagueName, []);
+                    leagueOrder.push(leagueName);
+                }
+                groupedMatches.get(leagueName).push(item);
+            };
+
+            let currentLeague = cleanLeagueName(sectionBody.slice(0, datePositions[0])) || fallbackLeague;
+
+            for (let i = 0; i < datePositions.length; i++) {
+                const start = datePositions[i];
+                const end = i < datePositions.length - 1 ? datePositions[i + 1] : sectionBody.length;
+                const segment = sectionBody.slice(start, end).trim();
+                const parsedMatch = parseMatchSegment(segment);
+
+                if (!parsedMatch) continue;
+
+                const leagueName = currentLeague || fallbackLeague;
+                pushMatch(leagueName, {
+                    time: parsedMatch.time,
+                    teams: `${parsedMatch.homeTeam} VS ${parsedMatch.awayTeam}`,
+                    score: parsedMatch.score
+                });
+
+                if (parsedMatch.trailingLeague) {
+                    currentLeague = parsedMatch.trailingLeague;
+                }
+            }
+
+            return leagueOrder.map(name => ({
+                name,
+                matches: groupedMatches.get(name)
+            }));
+        };
+
+        const parseSourceData = (htmlString) => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlString, 'text/html');
+            const rawText = doc.body ? doc.body.innerText : '';
+            const normalizedText = rawText
+                .replace(/\u00a0/g, ' ')
+                .replace(/\r/g, ' ')
+                .replace(/\s*\n\s*/g, ' ')
+                .replace(/\s{2,}/g, ' ')
+                .trim();
+
+            if (!normalizedText) return null;
+
+            const displayTitleMatch = normalizedText.match(SOURCE_DATE_TITLE_REGEX);
+            const displayTitle = displayTitleMatch ? displayTitleMatch[1].trim() : 'PREDIKSI BOLA TERKINI';
+
+            const jadwalSection = extractSection(normalizedText, 'JADWAL BOLA', 'PREDIKSI BOLA');
+            const prediksiSection = extractSection(normalizedText, 'PREDIKSI BOLA');
+
+            const scheduleLeagues = parseLeagueSection(
+                jadwalSection,
+                /^JADWAL BOLA\s+\d{1,2}\s*-\s*\d{1,2}\s+[A-Z]+\s+\d{4}\s*/i,
+                'JADWAL PERTANDINGAN'
+            );
+
+            const predictionLeagues = parseLeagueSection(
+                prediksiSection,
+                /^PREDIKSI BOLA\s+\d{1,2}\s*-\s*\d{1,2}\s+[A-Z]+\s+\d{4}\s*/i,
+                'PREDIKSI BOLA'
+            );
+
+            if (scheduleLeagues.length === 0) return null;
+
+            const predictionMap = new Map();
+            predictionLeagues.forEach(league => {
+                league.matches.forEach(match => {
+                    const [homeTeam = '', awayTeam = ''] = match.teams.split(/\s+VS\s+/i);
+                    predictionMap.set(buildMatchKey(homeTeam, awayTeam, match.time), match.score);
+                });
+            });
+
+            return {
+                current_date_header: displayTitle.replace(/PREDIKSI BOLA/gi, '').trim(),
+                display_date: displayTitle,
+                marquee_text: 'SELAMAT DATANG DI PREDIKSI BOLA WDBOS! | JADWAL PERTANDINGAN DIAMBIL DARI SUMBER RESMI LINK YANG ANDA BERIKAN.',
+                leagues: scheduleLeagues.map(league => ({
+                    name: league.name,
+                    matches: league.matches.map(match => {
+                        const [homeTeam = '', awayTeam = ''] = match.teams.split(/\s+VS\s+/i);
+                        return {
+                            time: match.time,
+                            teams: match.teams,
+                            score: predictionMap.get(buildMatchKey(homeTeam, awayTeam, match.time)) || '-'
+                        };
+                    })
+                }))
+            };
+        };
 
         const formatMatchText = (text) => {
             const parts = text.split(/\s+VS\s+/i);
@@ -981,6 +1081,10 @@
 
         const formatScoreText = (text) => {
             let raw = text.trim();
+
+            if (!raw || raw === '-') {
+                return `<span class="score-display">-</span>`;
+            }
 
             // 1. Jika sudah format skor murni (misal: "1:2" atau "2-0")
             const pureScore = raw.match(/^(\d+)\s*[:\-]\s*(\d+)$/);
@@ -1022,7 +1126,7 @@
         };
 
         function renderWithJSON(data) {
-            document.getElementById('currentDateHeader').textContent = '-';
+            document.getElementById('currentDateHeader').textContent = data.current_date_header || data.display_date || '-';
             document.getElementById('displayDateText').textContent = data.display_date || '';
             document.getElementById('marqueeContainer').innerHTML = `<p>${data.marquee_text || ''}</p>`;
 
