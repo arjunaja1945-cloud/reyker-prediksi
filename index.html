@@ -801,7 +801,8 @@
             DATA_URL: 'https://shortq.xyz/prediksibola',
             PROXY_URL: '/api/prediksi?url=', // Proxy internal agar aman di Vercel
             POLLING_INTERVAL: 15000,
-            AUTO_REFRESH: true
+            AUTO_REFRESH: true,
+            CACHE_MAX_AGE: 10 * 60 * 1000
         };
 
         let lastDataHash = null;
@@ -840,6 +841,35 @@
             `;
         }
 
+        function clearCachedDashboard() {
+            localStorage.removeItem('wdbos_last_data');
+            localStorage.removeItem('wdbos_last_title');
+            localStorage.removeItem('wdbos_last_hash');
+            localStorage.removeItem('wdbos_last_updated_at');
+        }
+
+        function getCachedDashboard() {
+            const cachedData = localStorage.getItem('wdbos_last_data');
+            const cachedTitle = localStorage.getItem('wdbos_last_title');
+            const cachedHash = localStorage.getItem('wdbos_last_hash');
+            const cachedUpdatedAt = Number(localStorage.getItem('wdbos_last_updated_at') || 0);
+
+            if (!cachedData || !cachedUpdatedAt) return null;
+
+            const isExpired = (Date.now() - cachedUpdatedAt) > CONFIG.CACHE_MAX_AGE;
+            if (isExpired) {
+                clearCachedDashboard();
+                return null;
+            }
+
+            return {
+                data: cachedData,
+                title: cachedTitle,
+                hash: cachedHash,
+                updatedAt: cachedUpdatedAt
+            };
+        }
+
         /**
          * Fungsi untuk mengambil dan memproses data secara otomatis
          * @param {boolean} force - Jika true, akan memaksa update meskipun data identik
@@ -867,6 +897,7 @@
                     localStorage.setItem('wdbos_last_data', finalData);
                     localStorage.setItem('wdbos_last_title', scheduleTitle);
                     localStorage.setItem('wdbos_last_hash', currentHash);
+                    localStorage.setItem('wdbos_last_updated_at', String(Date.now()));
                 }
             } catch (error) {
                 console.error('Update Error:', error);
@@ -1497,6 +1528,8 @@
             const icon = document.getElementById('refreshIcon');
             const originalHTML = btn.innerHTML;
 
+            clearCachedDashboard();
+
             // Efek Visual Menekan
             btn.style.transform = 'scale(0.95)';
             btn.style.background = 'rgba(255, 255, 255, 0.2)';
@@ -1523,20 +1556,24 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             // BOOT INSTAN: Cek cache LocalStorage dulu sebelum fetch live
-            const cachedData = localStorage.getItem('wdbos_last_data');
-            const cachedTitle = localStorage.getItem('wdbos_last_title');
-            const cachedHash = localStorage.getItem('wdbos_last_hash');
+            const cachedDashboard = getCachedDashboard();
 
-            if (cachedData) {
-                window.currentScheduleTitle = cachedTitle;
-                processIncomingData(cachedData);
-                lastDataHash = cachedHash;
+            if (cachedDashboard) {
+                window.currentScheduleTitle = cachedDashboard.title;
+                processIncomingData(cachedDashboard.data);
+                lastDataHash = cachedDashboard.hash;
                 console.log("INSTANT LOAD: Data dimuat dari memori lokal.");
             }
 
-            updateDashboard();
+            updateDashboard(true);
             if (CONFIG.AUTO_REFRESH) {
                 setInterval(updateDashboard, CONFIG.POLLING_INTERVAL);
+            }
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                updateDashboard(true);
             }
         });
     </script>
